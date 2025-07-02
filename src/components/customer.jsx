@@ -39,8 +39,8 @@ function customer() {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
+  const [isOpen, setIsOpen] = useState(false);
   const [language, setLanguage] = useState("EN");
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -67,6 +67,7 @@ function customer() {
     <>
       <header className="header">
         <img className="headerLogo" src={logo} alt="logo" />
+        {/* burger menu */}
         <button
           className="open-btn material-symbols-outlined"
           onClick={() => setIsMenuOpen(true)}
@@ -75,19 +76,12 @@ function customer() {
         </button>
       </header>
 
+      {/* language */}
       <section className="section-1">
         <div className="lang-dropdown">
           <button className="lang-button" onClick={() => setIsOpen(!isOpen)}>
             🌐 {language} ▼
           </button>
-
-          {/* transparent screen overlay */}
-          {isOpen && (
-            <div
-              className="transparent-overlay"
-              onClick={() => setIsOpen(false)}
-            ></div>
-          )}
 
           {isOpen && (
             <div className="lang-menu">
@@ -126,6 +120,14 @@ function customer() {
 
       {/* menu content */}
       {sectionComponents[activeIndex]}
+
+      {/* transparent screen overlay */}
+      {isOpen && (
+        <div
+          className="transparent-overlay"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
 
       {/* screen overlay */}
       {isMenuOpen && (

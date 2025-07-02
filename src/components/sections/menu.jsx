@@ -1,14 +1,39 @@
-import "/images.png";
+function menu({
+  logo,
+  name,
+  price,
+  quantity,
+  onAdd,
+  onIncrement,
+  onDecrement,
+}) {
+  const item = { logo, name, price };
 
-function menu(props) {
   return (
-    <>
-      <div className="card">
-        <img className="card-image" src={props.logo} alt="logo" />
-        <h4 className="card-name">{props.name}</h4>
-        <h4 className="card-price">{props.price}</h4>
+    <div className="card">
+      <div className="menu-image-container">
+        <img className="card-image" src={logo} alt={name} />
+        <div className="menu-overlay button-group">
+          {quantity === 0 ? (
+            <button onClick={() => onAdd(item)}>➕</button>
+          ) : quantity === 1 ? (
+            <>
+              <button onClick={() => onDecrement(item)}>🗑</button>
+              <span>{quantity}</span>
+              <button onClick={() => onIncrement(item)}>➕</button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => onDecrement(item)}>➖</button>
+              <span>{quantity}</span>
+              <button onClick={() => onIncrement(item)}>➕</button>
+            </>
+          )}
+        </div>
       </div>
-    </>
+      <h4 className="card-name">{name}</h4>
+      <p className="card-price">₱{price}.00</p>
+    </div>
   );
 }
 
