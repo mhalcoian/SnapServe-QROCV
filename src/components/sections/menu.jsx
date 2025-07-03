@@ -15,18 +15,23 @@ function menu({
         <img className="card-image" src={logo} alt={name} />
         <div className="menu-overlay button-group">
           {quantity === 0 ? (
-            <button onClick={() => onAdd(item)}>➕</button>
+            <button onClick={() => onAdd(item)}>+</button>
           ) : quantity === 1 ? (
             <>
-              <button onClick={() => onDecrement(item)}>🗑</button>
+              <button
+                className="material-symbols-outlined"
+                onClick={() => onDecrement(item)}
+              >
+                delete
+              </button>
               <span>{quantity}</span>
-              <button onClick={() => onIncrement(item)}>➕</button>
+              <button onClick={() => onIncrement(item)}>+</button>
             </>
           ) : (
             <>
-              <button onClick={() => onDecrement(item)}>➖</button>
+              <button onClick={() => onDecrement(item)}>-</button>
               <span>{quantity}</span>
-              <button onClick={() => onIncrement(item)}>➕</button>
+              <button onClick={() => onIncrement(item)}>+</button>
             </>
           )}
         </div>

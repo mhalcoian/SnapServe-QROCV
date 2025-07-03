@@ -30,14 +30,6 @@ function customer() {
     </span>,
   ];
 
-  const sectionComponents = [
-    <PopularComponent />,
-    <AppetizersComponent />,
-    <Main_DishComponent />,
-    <DessertsComponent />,
-    <DrinksComponent />,
-  ];
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +38,59 @@ function customer() {
   const [activeIndex, setActiveIndex] = useState(0);
   const navRef = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({});
+
+  const [cartItems, setCartItems] = useState({});
+
+  const handleAdd = (item) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [item.name]: { ...item, quantity: 1 },
+    }));
+  };
+
+  const handleIncrement = (item) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [item.name]: {
+        ...item,
+        quantity: prev[item.name].quantity + 1,
+      },
+    }));
+  };
+
+  const handleDecrement = (item) => {
+    if (cartItems[item.name].quantity <= 1) {
+      const newCart = { ...cartItems };
+      delete newCart[item.name];
+      setCartItems(newCart);
+    } else {
+      setCartItems((prev) => ({
+        ...prev,
+        [item.name]: {
+          ...item,
+          quantity: prev[item.name].quantity - 1,
+        },
+      }));
+    }
+  };
+
+  const sectionComponents = [
+    <PopularComponent
+      cartItems={cartItems}
+      onAdd={handleAdd}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+    />,
+    <AppetizersComponent
+      cartItems={cartItems}
+      onAdd={handleAdd}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+    />,
+    <Main_DishComponent />,
+    <DessertsComponent />,
+    <DrinksComponent />,
+  ];
 
   // change indicator effect
   useEffect(() => {
@@ -98,7 +143,7 @@ function customer() {
           )}
         </div>
 
-        <h4>table-number</h4>
+        <h4>Table # 1</h4>
       </section>
 
       {/* navigation */}
@@ -141,6 +186,33 @@ function customer() {
         </button>
         <h2>What can I do for you?</h2>
       </div>
+
+      {/* cart */}
+      {Object.values(cartItems).reduce(
+        (total, item) => total + item.quantity,
+        0
+      ) > 0 && (
+        <div className="cart-bar">
+          <span className="cart-icon material-symbols-outlined">
+            shopping_cart
+            <span className="cart-badge">
+              {Object.values(cartItems).reduce(
+                (total, item) => total + item.quantity,
+                0
+              )}
+            </span>
+          </span>
+          <span className="cart-text">View cart</span>
+          <span className="cart-price">
+            ₱
+            {Object.values(cartItems).reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            )}
+            .00
+          </span>
+        </div>
+      )}
     </>
   );
 }
