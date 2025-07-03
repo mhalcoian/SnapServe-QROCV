@@ -31,6 +31,15 @@ function appetizers({ cartItems, onAdd, onIncrement, onDecrement }) {
           onIncrement={onIncrement}
           onDecrement={onDecrement}
         />
+        <MenuComponent
+          logo="./images.png"
+          name="Crispy Calamari Bites"
+          price={457}
+          quantity={cartItems["Crispy Calamari Bites"]?.quantity || 0}
+          onAdd={onAdd}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+        />
       </div>
     </>
   );

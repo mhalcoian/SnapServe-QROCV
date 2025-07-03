@@ -87,9 +87,24 @@ function customer() {
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
     />,
-    <Main_DishComponent />,
-    <DessertsComponent />,
-    <DrinksComponent />,
+    <Main_DishComponent
+      cartItems={cartItems}
+      onAdd={handleAdd}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+    />,
+    <DessertsComponent
+      cartItems={cartItems}
+      onAdd={handleAdd}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+    />,
+    <DrinksComponent
+      cartItems={cartItems}
+      onAdd={handleAdd}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+    />,
   ];
 
   // change indicator effect
