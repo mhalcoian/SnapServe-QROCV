@@ -40,11 +40,27 @@ function customer() {
   const [indicatorStyle, setIndicatorStyle] = useState({});
 
   const [cartItems, setCartItems] = useState({});
+  const [isCardOpenModal, setIsCardOpenModal] = useState(false);
+  const [modalItem, setModalItem] = useState();
   const [showToast, setShowToast] = useState(false);
   const [isCartItems, setIsCartItems] = useState(false);
-  const [isCartListItems, setIsCartListItems] = useState(true);
+  const [isCartListItems, setIsCartListItems] = useState(false);
 
   const [requestItems, setRequestItems] = useState({});
+
+  const handleCardModalOpen = (item) => {
+    const quantityInCart = cartItems[item.name]?.quantity || 0;
+    setModalItem({
+      ...item,
+      quantity: quantityInCart,
+    });
+    setIsCardOpenModal(true);
+  };
+
+  const handleCardModalClose = () => {
+    setIsCardOpenModal(false);
+    setModalItem(null);
+  };
 
   const handleAdd = (item) => {
     setCartItems((prev) => ({
@@ -112,32 +128,48 @@ function customer() {
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
+      onOpenCardModal={handleCardModalOpen}
     />,
     <AppetizersComponent
       cartItems={cartItems}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
+      onOpenCardModal={handleCardModalOpen}
     />,
     <Main_DishComponent
       cartItems={cartItems}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
+      onOpenCardModal={handleCardModalOpen}
     />,
     <DessertsComponent
       cartItems={cartItems}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
+      onOpenCardModal={handleCardModalOpen}
     />,
     <DrinksComponent
       cartItems={cartItems}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
+      onOpenCardModal={handleCardModalOpen}
     />,
   ];
+
+  // update modal quantity
+  useEffect(() => {
+    if (modalItem) {
+      const updatedQuantity = cartItems[modalItem.name]?.quantity || 0;
+      setModalItem((prev) => ({
+        ...prev,
+        quantity: updatedQuantity,
+      }));
+    }
+  }, [cartItems]);
 
   // change indicator effect
   useEffect(() => {
@@ -150,6 +182,7 @@ function customer() {
     }
   }, [activeIndex]);
 
+  // show cart items
   useEffect(() => {
     const hasItems =
       Object.values(cartItems).reduce(
@@ -416,6 +449,54 @@ function customer() {
           .00
         </span>
       </div>
+
+      {/* modal */}
+      {isCardOpenModal && modalItem && (
+        <div className={`modal-content ${isCardOpenModal ? "show" : ""}`}>
+          <img
+            className="modal-image"
+            src={modalItem.logo}
+            alt={modalItem.name}
+          />
+          <div className="menu-overlay modal-button-group">
+            {modalItem.quantity === 0 ? (
+              <button onClick={() => handleAdd(modalItem)}>+</button>
+            ) : modalItem.quantity === 1 ? (
+              <>
+                <button
+                  className="material-symbols-outlined"
+                  onClick={() => handleDecrement(modalItem)}
+                >
+                  delete
+                </button>
+                <span>{modalItem.quantity}</span>
+                <button onClick={() => handleIncrement(modalItem)}>+</button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => handleDecrement(modalItem)}>-</button>
+                <span>{modalItem.quantity}</span>
+                <button onClick={() => handleIncrement(modalItem)}>+</button>
+              </>
+            )}
+          </div>
+
+          <div className="modal-footer">
+            <p className="modal-description">{modalItem.description}</p>
+            <p className="modal-price">
+              ₱{modalItem.price.toLocaleString()}.00
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* modal overlay */}
+      {isCardOpenModal && (
+        <div
+          className="overlay"
+          onClick={() => handleCardModalClose(false)}
+        ></div>
+      )}
     </>
   );
 }

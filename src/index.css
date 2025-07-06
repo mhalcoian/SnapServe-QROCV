@@ -29,8 +29,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 9;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1001;
 }
 
 .slide-menu {
@@ -361,7 +361,7 @@
 }
 
 .card .card-price {
-  color: rgba(0, 160, 0, 0.8);
+  color: #007a00cc;
 }
 
 .card .button-group {
@@ -453,7 +453,7 @@
   justify-content: space-around;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   font-size: 14px;
-  z-index: 1001;
+  z-index: 9999;
   transition: all 0.3s ease, opacity 0.1s ease;
   gap: 8px;
   opacity: 0;
@@ -572,7 +572,7 @@
 }
 
 .add {
-  background-color: #16ac16;
+  background-color: #209f20cc;
   color: #fff;
   padding: 0px 3px;
 }
@@ -589,12 +589,13 @@
 }
 
 .quantity-box {
-  padding: 8px 12px;
-  background: #eee;
+  padding: 16px 12px;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 8px;
   min-width: 32px;
   text-align: center;
   font-weight: 600;
+  color: #fff;
 }
 
 .cart-footer {
@@ -629,4 +630,82 @@
   font-weight: 600;
   font-size: 16px;
   margin: 0 4rem;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 60%;
+  width: 100%;
+  max-height: 642px;
+  max-width: 425px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1003;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 6s ease-in-out;
+  opacity: 0;
+}
+
+.modal-content.show {
+  opacity: 1;
+  transition: opacity 6s ease-in-out;
+}
+
+.modal-content .modal-button-group {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #fff;
+}
+
+.modal-button-group button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.modal-image {
+  height: 100%;
+  width: 100%;
+  max-height: 642px;
+  max-width: 425px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.modal-footer {
+  width: 90%;
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.8);
+  text-align: center;
+  border-radius: 10px;
+}
+
+.modal-description {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.modal-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #8aef8acc;
 }
