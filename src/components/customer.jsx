@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import PopularComponent from "./sections/popular";
 import AppetizersComponent from "./sections/appetizers";
 import Main_DishComponent from "./sections/main_dish";
@@ -7,33 +8,10 @@ import DrinksComponent from "./sections/drinks";
 import logo from "/images.png";
 
 function customer() {
-  const navItems = [
-    <span className="navbar-category" key="popular">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      Popular
-    </span>,
-    <span className="navbar-category" key="appetizers">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      Appetizers
-    </span>,
-    <span className="navbar-category" key="main_dish">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      Main Dish
-    </span>,
-    <span className="navbar-category" key="desserts">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      Desserts
-    </span>,
-    <span className="navbar-category" key="drinks">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      Drinks
-    </span>,
-  ];
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [language, setLanguage] = useState("EN");
+  const [t, i18n] = useTranslation();
 
   const [activeIndex, setActiveIndex] = useState(0);
   const navRef = useRef([]);
@@ -47,6 +25,29 @@ function customer() {
   const [isCartListItems, setIsCartListItems] = useState(false);
 
   const [requestItems, setRequestItems] = useState({});
+
+  const navItems = [
+    <span className="navbar-category" key="popular">
+      <img src={logo} alt="logo" style={{ height: "20px" }} />
+      {t("sections.popular")}
+    </span>,
+    <span className="navbar-category" key="appetizers">
+      <img src={logo} alt="logo" style={{ height: "20px" }} />
+      {t("sections.appetizers")}
+    </span>,
+    <span className="navbar-category" key="main_dish">
+      <img src={logo} alt="logo" style={{ height: "20px" }} />
+      {t("sections.main_dish")}
+    </span>,
+    <span className="navbar-category" key="desserts">
+      <img src={logo} alt="logo" style={{ height: "20px" }} />
+      {t("sections.desserts")}
+    </span>,
+    <span className="navbar-category" key="drinks">
+      <img src={logo} alt="logo" style={{ height: "20px" }} />
+      {t("sections.drinks")}
+    </span>,
+  ];
 
   const handleCardModalOpen = (item) => {
     const quantityInCart = cartItems[item.name]?.quantity || 0;
@@ -122,6 +123,11 @@ function customer() {
     }
   };
 
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    setIsOpen(false);
+  };
+
   const sectionComponents = [
     <PopularComponent
       cartItems={cartItems}
@@ -193,15 +199,11 @@ function customer() {
     setIsCartItems(hasItems);
   }, [cartItems]);
 
-  const changeLanguage = (lang) => {
-    setLanguage(lang);
-    setIsOpen(false);
-  };
-
   return (
     <>
       <header className="header">
         <img className="headerLogo" src={logo} alt="logo" />
+        <h3 className="headerTitle">{t("welcome")}</h3>
         {/* burger menu */}
         <button
           className="open-btn material-symbols-outlined"
@@ -212,31 +214,31 @@ function customer() {
       </header>
 
       {/* language */}
-      <section className="section-1">
+      <div className="sub-header">
         <div className="lang-dropdown">
           <button className="lang-button" onClick={() => setIsOpen(!isOpen)}>
-            🌐 {language} ▼
+            🌐 {i18n.language.toUpperCase()} ▼
           </button>
 
           {isOpen && (
             <div className="lang-menu">
-              {["EN", "KR"].map((lang) => (
+              {["en", "kr"].map((lang) => (
                 <div
                   key={lang}
                   className="lang-option"
                   onClick={() => changeLanguage(lang)}
                 >
-                  {lang}
+                  {lang.toUpperCase()}
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <h4>Dine - In</h4>
+        <h4>{t("dine_in")}</h4>
 
-        <h4>Table # 1</h4>
-      </section>
+        <h4>{t("table")} # 1</h4>
+      </div>
 
       {/* navigation */}
       <nav className="navbar-container">
@@ -272,7 +274,7 @@ function customer() {
       )}
 
       {/* slidebar/flyout */}
-      <div className={`slide-menu ${isMenuOpen ? "open" : ""}`}>
+      <div className={`slider-menu ${isMenuOpen ? "open" : ""}`}>
         <div className="slider-menu-header">
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
             {"<"}

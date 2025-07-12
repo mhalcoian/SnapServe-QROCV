@@ -1,4 +1,4 @@
-import MenuComponent from "./menu";
+import CardComponent from "../products/card";
 
 function popular({
   cartItems,
@@ -10,7 +10,7 @@ function popular({
   return (
     <>
       <div className="card-container">
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Garlic Butter Shrimp"
           price={800}
@@ -21,7 +21,7 @@ function popular({
           onDecrement={onDecrement}
           onOpenCardModal={onOpenCardModal}
         />
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Korean BBQ Samgyeopsal"
           price={1000}
@@ -32,7 +32,7 @@ function popular({
           onDecrement={onDecrement}
           onOpenCardModal={onOpenCardModal}
         />
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Cheesy Baked Mac"
           price={578}

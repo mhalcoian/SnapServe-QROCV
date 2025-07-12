@@ -1,4 +1,4 @@
-import MenuComponent from "./menu";
+import CardComponent from "../products/card";
 
 function main_dish({
   cartItems,
@@ -10,44 +10,44 @@ function main_dish({
   return (
     <>
       <div className="card-container">
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Beef Bulgogi Rice Bowl"
           price={1200}
-          description=""
+          description="Tender marinated beef stir-fried with onions and sesame seeds, served over rice."
           quantity={cartItems["Beef Bulgogi Rice Bowl"]?.quantity || 0}
           onAdd={onAdd}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
           onOpenCardModal={onOpenCardModal}
         />
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Creamy Tuscan Chicken Pasta"
           price={1500}
-          description=""
+          description="Chiken breast in a creamy garlic parmesan sauce with sundried tomatoes and spinach."
           quantity={cartItems["Creamy Tuscan Chicken Pasta"]?.quantity || 0}
           onAdd={onAdd}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
           onOpenCardModal={onOpenCardModal}
         />
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Chicken Adobo"
           price={180}
-          description=""
+          description="Tender chicken simmered in soy sauce, vinegar, garlic, and spices."
           quantity={cartItems["Chicken Adobo"]?.quantity || 0}
           onAdd={onAdd}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
           onOpenCardModal={onOpenCardModal}
         />
-        <MenuComponent
+        <CardComponent
           logo="./images.png"
           name="Grilled Fish"
           price={250}
-          description=""
+          description="Grilled fish with lemons and served with a dip."
           quantity={cartItems["Grilled Fish"]?.quantity || 0}
           onAdd={onAdd}
           onIncrement={onIncrement}

@@ -1,4 +1,4 @@
-function menu({
+function card({
   logo,
   name,
   price,
@@ -14,9 +14,9 @@ function menu({
   return (
     <>
       <div className="card" onClick={() => onOpenCardModal(item)}>
-        <div className="menu-image-container">
+        <div>
           <img className="card-image" src={logo} alt={name} />
-          <div className="menu-overlay button-group">
+          <div className="card-button-group">
             {quantity === 0 ? (
               <button
                 onClick={(e) => {
@@ -77,4 +77,4 @@ function menu({
   );
 }
 
-export default menu;
+export default card;
