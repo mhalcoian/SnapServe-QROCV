@@ -1,4 +1,5 @@
 function card({
+  id,
   logo,
   name,
   price,
@@ -9,7 +10,7 @@ function card({
   onDecrement,
   onOpenCardModal,
 }) {
-  const item = { logo, name, price, description };
+  const item = { id, logo, name, price, description };
 
   return (
     <>
@@ -70,8 +71,8 @@ function card({
             )}
           </div>
         </div>
-        <h4 className="card-name">{name}</h4>
-        <p className="card-price">₱{price}.00</p>
+        <h1 className="card-name">{name}</h1>
+        <h1 className="card-price">₱{price.toFixed(2)}</h1>
       </div>
     </>
   );

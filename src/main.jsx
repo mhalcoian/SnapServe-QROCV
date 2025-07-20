@@ -6,6 +6,7 @@ import "./css/navigation.css";
 import "./css/errorhandler.css";
 import "./css/card.css";
 import "./css/cart.css";
+import "./css/vieworders.css";
 import "./i18n";
 import App from "./App.jsx";
 

@@ -16,6 +16,7 @@
 .navbar-category {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-item {

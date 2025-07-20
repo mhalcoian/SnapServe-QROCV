@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import api from "../api";
 import PopularComponent from "./sections/popular";
 import AppetizersComponent from "./sections/appetizers";
 import Main_DishComponent from "./sections/main_dish";
 import DessertsComponent from "./sections/desserts";
 import DrinksComponent from "./sections/drinks";
-import logo from "/images.png";
 
 function customer() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +17,8 @@ function customer() {
   const navRef = useRef([]);
   const [indicatorStyle, setIndicatorStyle] = useState({});
 
-  const [cartItems, setCartItems] = useState({});
+  const [products, setProducts] = useState([]);
+  const [productQuantity, setProductQuantity] = useState({});
   const [isCardOpenModal, setIsCardOpenModal] = useState(false);
   const [modalItem, setModalItem] = useState();
   const [showToast, setShowToast] = useState(false);
@@ -26,31 +27,15 @@ function customer() {
 
   const [requestItems, setRequestItems] = useState({});
 
-  const navItems = [
-    <span className="navbar-category" key="popular">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      {t("sections.popular")}
-    </span>,
-    <span className="navbar-category" key="appetizers">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      {t("sections.appetizers")}
-    </span>,
-    <span className="navbar-category" key="main_dish">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      {t("sections.main_dish")}
-    </span>,
-    <span className="navbar-category" key="desserts">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      {t("sections.desserts")}
-    </span>,
-    <span className="navbar-category" key="drinks">
-      <img src={logo} alt="logo" style={{ height: "20px" }} />
-      {t("sections.drinks")}
-    </span>,
-  ];
+  const [logo, setLogo] = useState("");
+  const [navItems, setNavItems] = useState([]);
+
+  const [isViewOrders, setIsViewOrders] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [expandedOrder, setExpandedOrder] = useState(null);
 
   const handleCardModalOpen = (item) => {
-    const quantityInCart = cartItems[item.name]?.quantity || 0;
+    const quantityInCart = productQuantity[item.id]?.quantity || 0;
     setModalItem({
       ...item,
       quantity: quantityInCart,
@@ -64,19 +49,19 @@ function customer() {
   };
 
   const handleAdd = (item) => {
-    setCartItems((prev) => ({
+    setProductQuantity((prev) => ({
       ...prev,
-      [item.name]: { ...item, quantity: 1 },
+      [item.id]: { ...item, quantity: 1 },
     }));
   };
 
   const handleIncrement = (item) => {
-    if (cartItems[item.name].quantity < 20) {
-      setCartItems((prev) => ({
+    if (productQuantity[item.id].quantity < 20) {
+      setProductQuantity((prev) => ({
         ...prev,
-        [item.name]: {
+        [item.id]: {
           ...item,
-          quantity: prev[item.name].quantity + 1,
+          quantity: prev[item.id].quantity + 1,
         },
       }));
     } else {
@@ -86,16 +71,16 @@ function customer() {
   };
 
   const handleDecrement = (item) => {
-    if (cartItems[item.name].quantity <= 1) {
-      const newCart = { ...cartItems };
-      delete newCart[item.name];
-      setCartItems(newCart);
+    if (productQuantity[item.id].quantity <= 1) {
+      const newProductQuantity = { ...productQuantity };
+      delete newProductQuantity[item.id];
+      setProductQuantity(newProductQuantity);
     } else {
-      setCartItems((prev) => ({
+      setProductQuantity((prev) => ({
         ...prev,
-        [item.name]: {
+        [item.id]: {
           ...item,
-          quantity: prev[item.name].quantity - 1,
+          quantity: prev[item.id].quantity - 1,
         },
       }));
     }
@@ -125,40 +110,51 @@ function customer() {
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
     setIsOpen(false);
   };
 
   const sectionComponents = [
     <PopularComponent
-      cartItems={cartItems}
+      t={t}
+      products={products}
+      productQuantity={productQuantity}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
       onOpenCardModal={handleCardModalOpen}
     />,
     <AppetizersComponent
-      cartItems={cartItems}
+      t={t}
+      products={products}
+      productQuantity={productQuantity}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
       onOpenCardModal={handleCardModalOpen}
     />,
     <Main_DishComponent
-      cartItems={cartItems}
+      t={t}
+      products={products}
+      productQuantity={productQuantity}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
       onOpenCardModal={handleCardModalOpen}
     />,
     <DessertsComponent
-      cartItems={cartItems}
+      t={t}
+      products={products}
+      productQuantity={productQuantity}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
       onOpenCardModal={handleCardModalOpen}
     />,
     <DrinksComponent
-      cartItems={cartItems}
+      t={t}
+      products={products}
+      productQuantity={productQuantity}
       onAdd={handleAdd}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
@@ -166,38 +162,135 @@ function customer() {
     />,
   ];
 
+  // useEffect(() => {
+  //   const fetchOrders = async () => {
+  //     try {
+  //       const hash = localStorage.getItem("guestHash");
+  //       const response = await api.get("/guests/orders/table", {
+  //         params: { hash },
+  //       });
+  //       setOrders(response.data.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch orders:", error);
+  //     }
+  //   };
+
+  //   fetchOrders();
+  // }, []);
+
   // update modal quantity
   useEffect(() => {
     if (modalItem) {
-      const updatedQuantity = cartItems[modalItem.name]?.quantity || 0;
+      const updatedQuantity = productQuantity[modalItem.id]?.quantity || 0;
       setModalItem((prev) => ({
         ...prev,
         quantity: updatedQuantity,
       }));
     }
-  }, [cartItems]);
+  }, [productQuantity]);
 
   // change indicator effect
   useEffect(() => {
-    const currentActiveEl = navRef.current[activeIndex];
-    if (currentActiveEl) {
-      setIndicatorStyle({
-        left: currentActiveEl.offsetLeft,
-        width: currentActiveEl.offsetWidth,
-      });
-    }
+    const timeout = setTimeout(() => {
+      const currentActiveEl = navRef.current[activeIndex];
+      if (currentActiveEl) {
+        setIndicatorStyle({
+          left: currentActiveEl.offsetLeft,
+          width: currentActiveEl.offsetWidth,
+        });
+      }
+    }, 100);
+
+    const categoryId = activeIndex + 1;
+    const hash =
+      "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get(
+          `/guests/categories/${categoryId}/products`,
+          {
+            params: { hash },
+          }
+        );
+
+        setProducts(response.data.data);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+      }
+    };
+
+    fetchProducts();
+
+    return () => clearTimeout(timeout);
   }, [activeIndex]);
+
+  // fetch data from api
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const hash =
+          "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+
+        const response = await api.get("/guests/categories", {
+          params: { hash },
+        });
+
+        const items = response.data?.data.map((item) => ({
+          id: item.id,
+          label: item.description,
+          icon: `https://api.snapserve.cubetech.cloud/storage${item.icon_path}`,
+        }));
+
+        setNavItems(items);
+      } catch (err) {
+        console.error("Failed to load nav items:", err);
+      }
+    };
+
+    const fetchLogo = async () => {
+      try {
+        const hash =
+          "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+        const response = await api.get("/guests/current", {
+          params: { hash },
+        });
+
+        const path = response.data?.data?.thumbnail_path;
+        if (path) {
+          setLogo(`https://api.snapserve.cubetech.cloud/storage${path}`);
+        }
+      } catch (err) {
+        console.error("Failed to load logo:", err);
+      }
+    };
+
+    fetchLogo();
+    fetchCategories();
+  }, []);
 
   // show cart items
   useEffect(() => {
     const hasItems =
-      Object.values(cartItems).reduce(
+      Object.values(productQuantity).reduce(
         (total, item) => total + item.quantity,
         0
       ) > 0;
 
     setIsCartItems(hasItems);
-  }, [cartItems]);
+  }, [productQuantity]);
+
+  // const groupedOrders = orders.reduce((acc, item) => {
+  //   const ref = item.reference_no;
+  //   if (!acc[ref]) acc[ref] = [];
+  //   acc[ref].push(item);
+  //   return acc;
+  // }, {});
+
+  // const totalAmount = orders.reduce(
+  //   (sum, item) => sum + item.price * item.quantity,
+  //   0
+  // );
 
   return (
     <>
@@ -250,7 +343,10 @@ function customer() {
               ref={(el) => (navRef.current[index] = el)}
               onClick={() => setActiveIndex(index)}
             >
-              {item}
+              <div className="navbar-category" key={item.id}>
+                <img src={item.icon} alt={item.label} width={24} height={24} />
+                {t(`sections.${item.label}`)}
+              </div>
             </div>
           ))}
           <div className="nav-indicator" style={indicatorStyle} />
@@ -340,6 +436,56 @@ function customer() {
         </div>
       </div>
 
+      {/* view orders content */}
+      {/* <div className={`order-container ${isViewOrders ? "open" : ""}`}>
+        <div className="order-header">
+          <h2>Orders for Table 1</h2>
+          <p>
+            Total Amount:{" "}
+            {totalAmount.toLocaleString("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            })}
+          </p>
+        </div>
+
+        {Object.entries(groupedOrders).map(([ref, items]) => (
+          <div key={ref} className="order-group">
+            <div
+              className="order-group-header"
+              onClick={() =>
+                setExpandedOrder(expandedOrder === ref ? null : ref)
+              }
+            >
+              <div>
+                <p className="ref">{ref}</p>
+                <p className="status">{items[0].order_status}</p>
+              </div>
+              <span className="expand-icon">⌄</span>
+            </div>
+
+            {expandedOrder === ref && (
+              <div className="order-items">
+                {items.map((item) => (
+                  <div key={item.product_id} className="order-item">
+                    <div>
+                      <p className="product-name">{item.product_name}</p>
+                      <p className="qty">Qty: {item.quantity}</p>
+                    </div>
+                    <p className="price">
+                      {item.price.toLocaleString("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div> */}
+
       {/* toast */}
       <div>
         <div className={`toast ${showToast ? "open" : "close"}`}>
@@ -363,11 +509,15 @@ function customer() {
         </div>
 
         <div className="cart-body">
-          {Object.values(cartItems).map((item) => (
-            <div className="cart-item" key={item.name}>
+          {Object.values(productQuantity).map((item) => (
+            <div className="cart-item" key={item.id}>
               <img src={item.logo} alt={item.name} className="item-image" />
               <div className="item-details">
-                <div className="item-name">{item.name}</div>
+                <div className="item-name">
+                  {t(`products.${item.category_name}.${item.name}`, {
+                    defaultValue: item.name,
+                  })}
+                </div>
                 <div className="item-price">₱{item.price.toFixed(2)}</div>
               </div>
               <div className="item-controls">
@@ -409,11 +559,9 @@ function customer() {
             Place Order
             <span>
               ₱
-              {Object.values(cartItems).reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
-              )}
-              .00
+              {Object.values(productQuantity)
+                .reduce((sum, item) => sum + item.price * item.quantity, 0)
+                .toFixed(2)}
             </span>
           </button>
         </div>
@@ -435,7 +583,7 @@ function customer() {
         <div className="cart-icon material-symbols-outlined">
           shopping_cart
           <span className="cart-badge">
-            {Object.values(cartItems).reduce(
+            {Object.values(productQuantity).reduce(
               (total, item) => total + item.quantity,
               0
             )}
@@ -444,11 +592,9 @@ function customer() {
         <span className="cart-text">View cart</span>
         <span className="cart-price">
           ₱
-          {Object.values(cartItems).reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          )}
-          .00
+          {Object.values(productQuantity)
+            .reduce((sum, item) => sum + item.price * item.quantity, 0)
+            .toFixed(2)}
         </span>
       </div>
 
@@ -485,9 +631,7 @@ function customer() {
 
           <div className="modal-footer">
             <p className="modal-description">{modalItem.description}</p>
-            <p className="modal-price">
-              ₱{modalItem.price.toLocaleString()}.00
-            </p>
+            <p className="modal-price">₱{modalItem.price.toFixed(2)}</p>
           </div>
         </div>
       )}
