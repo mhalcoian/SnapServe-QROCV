@@ -1,36 +1,63 @@
 .order-container {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 95%;
+  width: 100%;
+  max-height: 642px;
+  max-width: 375px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1004;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.3s ease-in-out;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.order-container.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .order-header {
   text-align: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
+  background: #0d6ba3;
+}
+
+.order-header span {
+  position: fixed;
+  top: 0;
+  left: 96%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
 }
 
 .order-header h2 {
-  color: #1d4ed8;
+  color: #fff;
   margin: 0;
   font-size: 1.25rem;
 }
 
 .order-header p {
-  color: #2563eb;
-  font-weight: bold;
+  color: #fff;
   margin-top: 0.5rem;
 }
 
+.order-content {
+  overflow-y: auto;
+  margin: 1rem;
+}
+
 .order-group {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  border-bottom: 2px solid #aaa;
 }
 
 .order-group-header {
@@ -38,6 +65,15 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  padding: 1rem;
+}
+
+.order-group-header.open {
+  border-top: 2px solid #aaa;
+}
+
+.order-group-header:hover {
+  background: #f0f0f0;
 }
 
 .order-group-header .ref {
@@ -51,11 +87,23 @@
   margin: 0;
 }
 
-.expand-icon {
-  font-size: 1.25rem;
+.expand-icon,
+.extract-icon {
+  font-size: 1.5rem;
+}
+
+.order-items-wrapper {
+  padding: 0 1rem;
+  overflow: hidden;
+  transition: padding 0.3s ease;
+}
+
+.order-items-wrapper.open {
+  padding: 0.5rem 1rem;
 }
 
 .order-items {
+  padding: 0.5rem 1rem;
   margin-top: 0.5rem;
 }
 

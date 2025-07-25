@@ -32,7 +32,7 @@ function customer() {
 
   const [isViewOrders, setIsViewOrders] = useState(false);
   const [orders, setOrders] = useState([]);
-  const [expandedOrder, setExpandedOrder] = useState(null);
+  const [expandedOrders, setExpandedOrders] = useState([]);
 
   const handleCardModalOpen = (item) => {
     const quantityInCart = productQuantity[item.id]?.quantity || 0;
@@ -162,22 +162,6 @@ function customer() {
     />,
   ];
 
-  // useEffect(() => {
-  //   const fetchOrders = async () => {
-  //     try {
-  //       const hash = localStorage.getItem("guestHash");
-  //       const response = await api.get("/guests/orders/table", {
-  //         params: { hash },
-  //       });
-  //       setOrders(response.data.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch orders:", error);
-  //     }
-  //   };
-
-  //   fetchOrders();
-  // }, []);
-
   // update modal quantity
   useEffect(() => {
     if (modalItem) {
@@ -227,6 +211,19 @@ function customer() {
 
   // fetch data from api
   useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const hash =
+          "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+        const response = await api.get("/guests/orders/table", {
+          params: { hash },
+        });
+        setOrders(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      }
+    };
+
     const fetchCategories = async () => {
       try {
         const hash =
@@ -267,6 +264,7 @@ function customer() {
 
     fetchLogo();
     fetchCategories();
+    fetchOrders();
   }, []);
 
   // show cart items
@@ -280,17 +278,25 @@ function customer() {
     setIsCartItems(hasItems);
   }, [productQuantity]);
 
-  // const groupedOrders = orders.reduce((acc, item) => {
-  //   const ref = item.reference_no;
-  //   if (!acc[ref]) acc[ref] = [];
-  //   acc[ref].push(item);
-  //   return acc;
-  // }, {});
+  // keep the group orders expanded
+  useEffect(() => {
+    if (orders.length > 0) {
+      const refs = [...new Set(orders.map((o) => o.reference_no))];
+      setExpandedOrders(refs);
+    }
+  }, [orders]);
 
-  // const totalAmount = orders.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0
-  // );
+  const groupedOrders = orders.reduce((acc, item) => {
+    const ref = item.reference_no;
+    if (!acc[ref]) acc[ref] = [];
+    acc[ref].push(item);
+    return acc;
+  }, {});
+
+  const totalAmount = orders.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <>
@@ -417,7 +423,12 @@ function customer() {
                 <h3>My Orders</h3>
               </div>
 
-              <button className="btn-view-orders">View</button>
+              <button
+                className="btn-view-orders"
+                onClick={() => setIsViewOrders(true)}
+              >
+                View
+              </button>
             </div>
           </div>
 
@@ -437,54 +448,75 @@ function customer() {
       </div>
 
       {/* view orders content */}
-      {/* <div className={`order-container ${isViewOrders ? "open" : ""}`}>
+      <div className={`order-container ${isViewOrders ? "open" : ""}`}>
         <div className="order-header">
-          <h2>Orders for Table 1</h2>
-          <p>
-            Total Amount:{" "}
-            {totalAmount.toLocaleString("en-PH", {
-              style: "currency",
-              currency: "PHP",
-            })}
-          </p>
+          <div>
+            <h2>Orders for Table 1</h2>
+            <p>
+              Total Amount:{" "}
+              {totalAmount.toLocaleString("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              })}
+            </p>
+          </div>
+          <span onClick={() => setIsViewOrders(false)}>x</span>
         </div>
 
-        {Object.entries(groupedOrders).map(([ref, items]) => (
-          <div key={ref} className="order-group">
-            <div
-              className="order-group-header"
-              onClick={() =>
-                setExpandedOrder(expandedOrder === ref ? null : ref)
-              }
-            >
-              <div>
-                <p className="ref">{ref}</p>
-                <p className="status">{items[0].order_status}</p>
+        <div className="order-content">
+          {Object.entries(groupedOrders).map(([ref, items]) => (
+            <div key={ref} className="order-group">
+              <div
+                className={`order-group-header ${
+                  expandedOrders.includes(ref) ? "open" : ""
+                }`}
+                onClick={() =>
+                  setExpandedOrders((prev) =>
+                    prev.includes(ref)
+                      ? prev.filter((r) => r !== ref)
+                      : [...prev, ref]
+                  )
+                }
+              >
+                <div>
+                  <p className="ref">{ref}</p>
+                  <p className="status">{items[0].order_status}</p>
+                </div>
+                {expandedOrders.includes(ref) ? (
+                  <span className="extract-icon">^</span>
+                ) : (
+                  <span className="expand-icon">⌄</span>
+                )}
               </div>
-              <span className="expand-icon">⌄</span>
-            </div>
 
-            {expandedOrder === ref && (
-              <div className="order-items">
-                {items.map((item) => (
-                  <div key={item.product_id} className="order-item">
-                    <div>
-                      <p className="product-name">{item.product_name}</p>
-                      <p className="qty">Qty: {item.quantity}</p>
-                    </div>
-                    <p className="price">
-                      {item.price.toLocaleString("en-PH", {
-                        style: "currency",
-                        currency: "PHP",
-                      })}
-                    </p>
+              <div
+                className={`order-items-wrapper ${
+                  expandedOrders.includes(ref) ? "open" : ""
+                }`}
+              >
+                {expandedOrders.includes(ref) && (
+                  <div className="order-items">
+                    {items.map((item) => (
+                      <div key={item.product_id} className="order-item">
+                        <div>
+                          <p className="product-name">{item.product_name}</p>
+                          <p className="qty">Qty: {item.quantity}</p>
+                        </div>
+                        <p className="price">
+                          {item.price.toLocaleString("en-PH", {
+                            style: "currency",
+                            currency: "PHP",
+                          })}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-        ))}
-      </div> */}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* toast */}
       <div>
@@ -567,6 +599,56 @@ function customer() {
         </div>
       </div>
 
+      {/* order confirmation */}
+
+      <div className="modal-box">
+        <div className="modal-header">
+          <h2>Order Confirmation</h2>
+          <button className="close-button">✕</button>
+        </div>
+
+        <div className="modal-body">
+          <div className="status-icon">✅</div>
+          <h3 className="success-text">Your order was successfully placed</h3>
+
+          <div className="order-info">
+            <p>
+              <strong>Order Number:</strong>
+            </p>
+            <p>
+              <strong>Order Created At:</strong>
+            </p>
+            <p>
+              <strong>Table Number:</strong>
+            </p>
+          </div>
+
+          <div className="order-details">
+            <h4>Order Details:</h4>
+            {/* {order.items.map((item, index) => (
+              <div key={index} className="order-item">
+                <div>
+                  <p>{item.name}</p>
+                  <p className="per-item">₱ each</p>
+                </div>
+                <div className="item-total">
+                  <span>x</span>
+                  <span>₱</span>
+                </div>
+              </div>
+            ))} */}
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <div className="total-amount">
+            <span>Total Amount</span>
+            <strong>₱</strong>
+          </div>
+          <div className="countdown">Closing in: </div>
+        </div>
+      </div>
+
       {/* cart item list overlay */}
       {isCartListItems && (
         <div
@@ -643,6 +725,20 @@ function customer() {
           onClick={() => handleCardModalClose(false)}
         ></div>
       )}
+
+      {isViewOrders && (
+        <div
+          className="view-orders-overlay"
+          onClick={() => setIsViewOrders(false)}
+        ></div>
+      )}
+
+      {/* {isViewOrders && (
+        <div
+          className="view-orders-overlay"
+          onClick={() => setIsViewOrders(false)}
+        ></div>
+      )} */}
     </>
   );
 }

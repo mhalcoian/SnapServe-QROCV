@@ -1,0 +1,100 @@
+.modal-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  height: 100vh;
+  max-width: 768px;
+  width: 100%;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1004;
+}
+
+.modal-header {
+  background-color: #0d6ba3;
+  color: #fff;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px;
+  text-align: center;
+}
+
+.status-icon {
+  font-size: 48px;
+  color: green;
+  margin-bottom: 8px;
+}
+
+.success-text {
+  color: green;
+  margin-bottom: 16px;
+}
+
+.order-info {
+  text-align: left;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.order-details h4 {
+  text-align: left;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.per-item {
+  color: #f1f1f1;
+  font-size: 12px;
+}
+
+.item-total {
+  text-align: right;
+}
+
+.modal-footer {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #fff;
+}
+
+.total-amount {
+  background: #0d6ba3;
+  font-weight: bold;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #fff;
+}
+
+.countdown {
+  font-size: 14px;
+  color: #1976d2;
+}
