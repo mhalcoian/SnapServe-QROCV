@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./css/index.css";
 import "./css/header.css";
 import "./css/navigation.css";
+import "./css/maincontent.css";
 import "./css/errorhandler.css";
 import "./css/card.css";
 import "./css/cart.css";
