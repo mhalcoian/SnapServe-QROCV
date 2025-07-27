@@ -1,4 +1,5 @@
 function ViewOrders({
+  t,
   isViewOrders,
   totalAmount,
   setIsViewOrders,
@@ -11,9 +12,9 @@ function ViewOrders({
       <div className={`order-container ${isViewOrders ? "open" : ""}`}>
         <div className="order-header">
           <div>
-            <h2>Orders for Table 1</h2>
+            <h2>{t(`orders_for_table`)} 1</h2>
             <p>
-              Total Amount:{" "}
+              {t(`total_amount`)}:{" "}
               {totalAmount.toLocaleString("en-PH", {
                 style: "currency",
                 currency: "PHP",

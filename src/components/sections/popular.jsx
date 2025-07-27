@@ -1,7 +1,6 @@
 import CardComponent from "../products/card";
 
 function popular({
-  t,
   products,
   productQuantity,
   onAdd,
@@ -17,9 +16,9 @@ function popular({
             key={p.id}
             id={p.id}
             logo={`https://api.snapserve.cubetech.cloud/storage${p.image_path}`}
-            name={t(`products.popular.${p.name}`)}
+            name={p.name}
             price={Number(p.price)}
-            description={t(`products.popular.description.${p.description}`)}
+            description={p.description}
             quantity={productQuantity[p.id]?.quantity || 0}
             onAdd={onAdd}
             onIncrement={onIncrement}

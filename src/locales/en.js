@@ -2,8 +2,13 @@ export default {
   welcome: "Hello, Customer",
   table: "Table",
   dine_in: "Dine-In",
-  view_cart: "View cart",
-  place_order: "Place Order",
+  sections: {
+    Popular: "Popular",
+    Appetizers: "Appetizers",
+    "Main Dish": "Main Dish",
+    Desserts: "Desserts",
+    Drinks: "Drinks",
+  },
   products: {
     popular: {
       "Garlic Butter Shrimp": "Garlic Butter Shrimp",
@@ -82,11 +87,26 @@ export default {
       },
     },
   },
-  sections: {
-    Popular: "Popular",
-    Appetizers: "Appetizers",
-    "Main Dish": "Main Dish",
-    Desserts: "Desserts",
-    Drinks: "Drinks",
+  view_cart: "View cart",
+  cart: {
+    title: "Cart",
+    add: "Add More Items",
+    place: "Place Orders",
   },
+  menu: {
+    title: "What can I do for you?",
+    utensils: {
+      "Spoon and Fork": "Spoon and Fork",
+      Spoon: "Spoon",
+      Fork: "Fork",
+    },
+    water: "Water",
+    myorders: "My Orders",
+    request: "Request",
+    view: "View",
+    note: "Note",
+  },
+  orders_for_table: "Orders for Table",
+  total_amount: "Total Amount",
+  error_message_max: "Cannot exceed maximum quantity of 20.",
 };

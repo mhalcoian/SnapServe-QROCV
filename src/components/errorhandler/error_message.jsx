@@ -1,10 +1,10 @@
-function Toast({ showToast }) {
+function Toast({ t, showToast }) {
   return (
     <>
       <div>
         <div className={`toast ${showToast ? "open" : "close"}`}>
           <span className="icon">?</span>
-          <span>Cannot exceed maximum quantity of 20.</span>
+          <span>{t(`error_message_max`)}</span>
         </div>
       </div>
     </>

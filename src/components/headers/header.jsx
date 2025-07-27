@@ -66,7 +66,7 @@ function Header({
             >
               <div className="navbar-category" key={item.id}>
                 <img src={item.icon} alt={item.label} width={24} height={24} />
-                {t(`sections.${item.label}`)}
+                {item.label}
               </div>
             </div>
           ))}

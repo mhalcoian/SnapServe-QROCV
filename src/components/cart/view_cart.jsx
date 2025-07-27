@@ -12,7 +12,7 @@ function ViewCart({
       <div className={`cart-modal ${isCartListItems ? "open" : ""}`}>
         <div className="cart-header">
           <div className="header-cart-title">
-            <h3 className="cart-title">Cart</h3>
+            <h3 className="cart-title">{t(`cart.title`)}</h3>
           </div>
           <button
             className="close-btn"
@@ -27,11 +27,7 @@ function ViewCart({
             <div className="cart-item" key={item.id}>
               <img src={item.logo} alt={item.name} className="item-image" />
               <div className="item-details">
-                <div className="item-name">
-                  {t(`products.${item.category_name}.${item.name}`, {
-                    defaultValue: item.name,
-                  })}
-                </div>
+                <div className="item-name">{item.name}</div>
                 <div className="item-price">₱{item.price.toFixed(2)}</div>
               </div>
               <div className="item-controls">
@@ -67,13 +63,13 @@ function ViewCart({
             className="add-more-btn"
             onClick={() => setIsCartListItems(false)}
           >
-            Add More Items
+            {t(`cart.add`)}
           </button>
           <button
             className="place-order-btn"
             onClick={() => handlePlaceOrder()}
           >
-            Place Order
+            {t(`cart.place`)}
             <span>
               ₱
               {Object.values(productQuantity)

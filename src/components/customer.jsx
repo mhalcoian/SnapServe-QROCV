@@ -127,7 +127,6 @@ function customer() {
 
   const sectionComponents = [
     <PopularComponent
-      t={t}
       products={products}
       productQuantity={productQuantity}
       onAdd={handleAdd}
@@ -136,7 +135,6 @@ function customer() {
       onOpenCardModal={handleCardModalOpen}
     />,
     <AppetizersComponent
-      t={t}
       products={products}
       productQuantity={productQuantity}
       onAdd={handleAdd}
@@ -145,7 +143,6 @@ function customer() {
       onOpenCardModal={handleCardModalOpen}
     />,
     <Main_DishComponent
-      t={t}
       products={products}
       productQuantity={productQuantity}
       onAdd={handleAdd}
@@ -154,7 +151,6 @@ function customer() {
       onOpenCardModal={handleCardModalOpen}
     />,
     <DessertsComponent
-      t={t}
       products={products}
       productQuantity={productQuantity}
       onAdd={handleAdd}
@@ -163,7 +159,6 @@ function customer() {
       onOpenCardModal={handleCardModalOpen}
     />,
     <DrinksComponent
-      t={t}
       products={products}
       productQuantity={productQuantity}
       onAdd={handleAdd}
@@ -403,6 +398,7 @@ function customer() {
       />
 
       <SliderBarMenu
+        t={t}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
         requestItems={requestItems}
@@ -412,6 +408,7 @@ function customer() {
       />
 
       <CartButton
+        t={t}
         isCartItems={isCartItems}
         setIsCartListItems={setIsCartListItems}
         productQuantity={productQuantity}
@@ -434,6 +431,7 @@ function customer() {
       />
 
       <ViewOrders
+        t={t}
         isViewOrders={isViewOrders}
         totalAmount={totalAmount}
         setIsViewOrders={setIsViewOrders}
@@ -442,7 +440,7 @@ function customer() {
         setExpandedOrders={setExpandedOrders}
       />
 
-      <Toast showToast={showToast} />
+      <Toast t={t} showToast={showToast} />
 
       {/* cart item list overlay */}
       {isCartListItems && (
@@ -480,12 +478,7 @@ function customer() {
         ></div>
       )}
 
-      {/* {isViewOrders && (
-        <div
-          className="view-orders-overlay"
-          onClick={() => setIsViewOrders(false)}
-        ></div>
-      )} */}
+      {isOrderPlaced && <div className="create-orders-overlay"></div>}
     </>
   );
 }

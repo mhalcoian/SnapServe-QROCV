@@ -1,4 +1,4 @@
-function CartButton({ isCartItems, setIsCartListItems, productQuantity }) {
+function CartButton({ t, isCartItems, setIsCartListItems, productQuantity }) {
   return (
     <>
       <div
@@ -14,7 +14,7 @@ function CartButton({ isCartItems, setIsCartListItems, productQuantity }) {
             )}
           </span>
         </div>
-        <span className="cart-text">View cart</span>
+        <span className="cart-text">{t(`view_cart`)}</span>
         <span className="cart-price">
           ₱
           {Object.values(productQuantity)

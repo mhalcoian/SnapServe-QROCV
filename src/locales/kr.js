@@ -2,8 +2,13 @@ export default {
   welcome: "환영합니다",
   table: "테이블",
   dine_in: "식사 공간",
-  view_cart: "장바구니 보기",
-  place_order: "주문하기",
+  sections: {
+    Popular: "인기 메뉴",
+    Appetizers: "애피타이저",
+    "Main Dish": "주요 요리",
+    Desserts: "디저트",
+    Drinks: "음료",
+  },
   products: {
     popular: {
       "Garlic Butter Shrimp": "마늘 버터 새우",
@@ -82,11 +87,26 @@ export default {
       },
     },
   },
-  sections: {
-    Popular: "인기 메뉴",
-    Appetizers: "애피타이저",
-    "Main Dish": "주요 요리",
-    Desserts: "디저트",
-    Drinks: "음료",
+  view_cart: "장바구니 보기",
+  cart: {
+    title: "카트",
+    add: "더 많은 항목 추가",
+    place: "주문하기",
   },
+  menu: {
+    title: "무엇을 도와드릴까요?",
+    utensils: {
+      "Spoon and Fork": "숟가락과 포크",
+      Spoon: "숟가락",
+      Fork: "포크",
+      Water: "물",
+    },
+    myorders: "내 주문",
+    request: "요구",
+    view: "보다",
+    note: "메모",
+  },
+  orders_for_table: "테이블 주문",
+  total_amount: "총액",
+  error_message_max: "최대 수량은 20개를 초과할 수 없습니다.",
 };

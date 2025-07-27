@@ -1,4 +1,5 @@
 function SliderBarMenu({
+  t,
   isMenuOpen,
   setIsMenuOpen,
   requestItems,
@@ -13,7 +14,7 @@ function SliderBarMenu({
           <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
             {"<"}
           </button>
-          <h3>What can I do for you?</h3>
+          <h3>{t(`menu.title`)}</h3>
         </div>
 
         {/* request */}
@@ -27,7 +28,7 @@ function SliderBarMenu({
                 ) : (
                   <span className="material-symbols-outlined">local_drink</span>
                 )}
-                <h3>{title}</h3>
+                <h3>{t(`menu.utensils.${title}`)}</h3>
               </div>
               <div className="request-content">
                 <div>
@@ -40,7 +41,7 @@ function SliderBarMenu({
                   </button>
                 </div>
 
-                <button className="request-submit">Request</button>
+                <button className="request-submit">{t(`menu.request`)}</button>
               </div>
             </div>
           ))}
@@ -50,14 +51,14 @@ function SliderBarMenu({
             <div className="view-order-content">
               <div className="view-order-title">
                 <span className="material-symbols-outlined">receipt</span>
-                <h3>My Orders</h3>
+                <h3>{t(`menu.myorders`)}</h3>
               </div>
 
               <button
                 className="btn-view-orders"
                 onClick={() => setIsViewOrders(true)}
               >
-                View
+                {t(`menu.view`)}
               </button>
             </div>
           </div>
@@ -67,11 +68,12 @@ function SliderBarMenu({
             <div className="note-label">
               <textarea id="note" placeholder=" " />
               <label htmlFor="note" className="note">
-                Note
+                {t(`menu.note`)}
               </label>
             </div>
             <button className="btn-note-request">
-              <span className="material-symbols-outlined">send</span>Request
+              <span className="material-symbols-outlined">send</span>
+              {t(`menu.request`)}
             </button>
           </div>
         </div>
