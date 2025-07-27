@@ -1,8 +1,8 @@
 .modal-box {
   position: fixed;
-  top: 50%;
+  bottom: -100vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background: #fff;
   height: 100vh;
   max-width: 768px;
@@ -11,7 +11,12 @@
   overflow: hidden;
   font-family: sans-serif;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: bottom 0.3s ease;
   z-index: 1004;
+}
+
+.modal-box.open {
+  bottom: 0;
 }
 
 .modal-header {
@@ -48,26 +53,29 @@
 }
 
 .order-info {
-  text-align: left;
   margin-bottom: 16px;
-  text-align: center;
 }
 
-.order-details h4 {
-  text-align: left;
+h4 {
   margin-bottom: 8px;
-  text-align: center;
+}
+
+.order-details {
+  height: 220px;
+  overflow-y: auto;
 }
 
 .order-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
   font-size: 14px;
 }
 
 .per-item {
-  color: #f1f1f1;
+  text-align: left;
+  color: #aaa;
   font-size: 12px;
 }
 

@@ -20,7 +20,7 @@ function ViewOrders({
               })}
             </p>
           </div>
-          <span onClick={() => setIsViewOrders(false)}>x</span>
+          <span onClick={() => setIsViewOrders(false)}>✕</span>
         </div>
 
         <div className="order-content">
@@ -56,8 +56,11 @@ function ViewOrders({
               >
                 {expandedOrders.includes(ref) && (
                   <div className="order-items">
-                    {items.map((item) => (
-                      <div key={item.product_id} className="order-item">
+                    {items.map((item, index) => (
+                      <div
+                        key={`${ref}-${item.product_id}-${index}`}
+                        className="order-item"
+                      >
                         <div>
                           <p className="product-name">{item.product_name}</p>
                           <p className="qty">Qty: {item.quantity}</p>

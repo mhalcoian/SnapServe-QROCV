@@ -16,7 +16,7 @@ function Header({
     <>
       {/* main header */}
       <header className="header">
-        <img className="headerLogo" src={logo} alt="logo" />
+        {logo && <img className="headerLogo" src={logo} alt="logo" />}
         <h3 className="headerTitle">{t("welcome")}</h3>
         {/* burger menu */}
         <button

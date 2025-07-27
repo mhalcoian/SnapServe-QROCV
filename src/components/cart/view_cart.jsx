@@ -5,6 +5,7 @@ function ViewCart({
   t,
   handleDecrement,
   handleIncrement,
+  handlePlaceOrder,
 }) {
   return (
     <>
@@ -68,7 +69,10 @@ function ViewCart({
           >
             Add More Items
           </button>
-          <button className="place-order-btn">
+          <button
+            className="place-order-btn"
+            onClick={() => handlePlaceOrder()}
+          >
             Place Order
             <span>
               ₱

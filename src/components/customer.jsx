@@ -42,6 +42,9 @@ function customer() {
   const [orders, setOrders] = useState([]);
   const [expandedOrders, setExpandedOrders] = useState([]);
 
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+  const [orderRefs, setOrderRefs] = useState([]);
+
   const handleCardModalOpen = (item) => {
     const quantityInCart = productQuantity[item.id]?.quantity || 0;
     setModalItem({
@@ -306,6 +309,71 @@ function customer() {
     0
   );
 
+  const createOrder = async () => {
+    const today = new Date();
+    const dateOnly = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    const hash =
+      "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+
+    try {
+      const response = await api.post(
+        "/guests/orders",
+        {
+          total_amount: 0,
+          order_date: `${dateOnly.getFullYear()}-${String(
+            dateOnly.getMonth() + 1
+          ).padStart(2, "0")}-${String(dateOnly.getDate()).padStart(2, "0")}`,
+        },
+        { params: { hash } }
+      );
+
+      setOrderRefs(response.data.data);
+
+      return response.data.data.id;
+    } catch (err) {
+      console.error("Failed to create guest order:", err);
+      return null;
+    }
+  };
+
+  const addItemToOrder = async (orderId, item) => {
+    const hash =
+      "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+
+    try {
+      await api.post(
+        `/guests/orders/${orderId}/item`,
+        {
+          product_id: item.id,
+          quantity: item.quantity,
+          unit_price: item.price,
+          status: item.status,
+        },
+        { params: { hash } }
+      );
+    } catch (err) {
+      console.error("Failed to add item:", err);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    const orderId = await createOrder();
+    if (!orderId) return;
+
+    const items = Object.values(productQuantity);
+
+    for (const item of items) {
+      await addItemToOrder(orderId, item);
+    }
+
+    setIsOrderPlaced(true);
+  };
+
   return (
     <>
       <Header
@@ -356,9 +424,14 @@ function customer() {
         t={t}
         handleDecrement={handleDecrement}
         handleIncrement={handleIncrement}
+        handlePlaceOrder={handlePlaceOrder}
       />
 
-      {/* <CreateOrders /> */}
+      <CreateOrders
+        isOrderPlaced={isOrderPlaced}
+        orderRefs={orderRefs}
+        productQuantity={productQuantity}
+      />
 
       <ViewOrders
         isViewOrders={isViewOrders}
