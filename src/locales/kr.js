@@ -108,5 +108,6 @@ export default {
   },
   orders_for_table: "테이블 주문",
   total_amount: "총액",
-  error_message_max: "최대 수량은 20개를 초과할 수 없습니다.",
+  "Cannot exceed maximum quantity of 20.":
+    "최대 수량은 20개를 초과할 수 없습니다.",
 };

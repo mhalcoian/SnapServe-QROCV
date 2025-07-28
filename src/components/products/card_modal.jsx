@@ -37,7 +37,7 @@ function CardModal({
             )}
           </div>
 
-          <div className="modal-footer">
+          <div className="modal-desc-price-container">
             <p className="modal-description">{modalItem.description}</p>
             <p className="modal-price">₱{modalItem.price.toFixed(2)}</p>
           </div>

@@ -137,16 +137,16 @@
   border-radius: 10px;
 }
 
-.modal-footer {
+.modal-desc-price-container {
   width: 90%;
   position: fixed;
   bottom: 60px;
   left: 50%;
   transform: translate(-50%, 50%);
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.8);
   text-align: center;
   border-radius: 10px;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .modal-description {

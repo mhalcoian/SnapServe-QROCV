@@ -29,9 +29,13 @@ function customer() {
   const [productQuantity, setProductQuantity] = useState({});
   const [isCardOpenModal, setIsCardOpenModal] = useState(false);
   const [modalItem, setModalItem] = useState();
-  const [showToast, setShowToast] = useState(false);
   const [isCartItems, setIsCartItems] = useState(false);
   const [isCartListItems, setIsCartListItems] = useState(false);
+
+  const [isShowToast, setIsShowToast] = useState(false);
+  const [isToastTop, setIsToastTop] = useState(false);
+  const [isToastLeft, setIsToastLeft] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const [requestItems, setRequestItems] = useState({});
 
@@ -44,6 +48,8 @@ function customer() {
 
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [orderRefs, setOrderRefs] = useState([]);
+
+  const [note, setNote] = useState("");
 
   const handleCardModalOpen = (item) => {
     const quantityInCart = productQuantity[item.id]?.quantity || 0;
@@ -76,8 +82,20 @@ function customer() {
         },
       }));
     } else {
-      setShowToast(true); // error handler
-      setTimeout(() => setShowToast(false), 3000); // hide after 3 seconds
+      if (!isShowToast) {
+        setIsToastTop(true);
+        setIsToastLeft(false);
+
+        setToastMessage("Cannot exceed maximum quantity of 20.");
+
+        setTimeout(() => setIsToastTop(false), 3000);
+        setTimeout(() => setIsToastLeft(true), 2000);
+        setTimeout(() => setIsToastLeft(false), 3000);
+
+        setTimeout(() => setIsShowToast(false), 3200);
+      }
+
+      setIsShowToast(true);
     }
   };
 
@@ -369,6 +387,95 @@ function customer() {
     setIsOrderPlaced(true);
   };
 
+  const sendRequest = async (data) => {
+    const hash =
+      "eyJhcGlfdG9rZW4iOiJYOUlETUlLTWVFMktHNm1BTkhZM3ppUTJWVG1VbGZRdCIsInV1aWQiOiI3YTc1NmNlNy01ZDI3LTQwNGItOGMxZC03NGViMjM3NjY4NDAifQ==.ADqnddCCwdnSa3dx-sLgVw6dhk5qcIBN3KyK5OSfBMk=";
+
+    try {
+      await api.post(
+        "/guests/requests",
+        {
+          description: `${data}`,
+        },
+        {
+          params: { hash },
+        }
+      );
+    } catch (err) {
+      console.error("Request failed:", err);
+    }
+  };
+
+  const handleRequest = async (title) => {
+    const quantity = requestItems[title]?.quantity || 0;
+
+    let message = "";
+
+    try {
+      if (!isShowToast) {
+        if (quantity > 0) {
+          setRequestItems((prev) => ({
+            ...prev,
+            [title]: {
+              ...prev[title],
+              quantity: 0,
+            },
+          }));
+
+          message = `Request for ${quantity} pc(s) of ${title.toLowerCase()}`;
+
+          sendRequest(message);
+        } else {
+          message = `Please enter a quantity greater than 0`;
+        }
+
+        setIsToastTop(true);
+        setIsToastLeft(false);
+
+        setToastMessage(message);
+
+        setTimeout(() => setIsToastTop(false), 3000);
+        setTimeout(() => setIsToastLeft(true), 2000);
+        setTimeout(() => setIsToastLeft(false), 3000);
+
+        setTimeout(() => setIsShowToast(false), 3200);
+      }
+
+      setIsShowToast(true);
+    } catch (err) {
+      console.error("Request failed:", err);
+    }
+  };
+
+  const handleNoteRequest = () => {
+    let message = "";
+
+    const trimmedNote = note.trim();
+
+    if (!isShowToast) {
+      if (trimmedNote !== "") {
+        message = "Note sent";
+        sendRequest(trimmedNote);
+        setNote("");
+      } else {
+        message = "Please enter a note";
+      }
+
+      setIsToastTop(true);
+      setIsToastLeft(false);
+
+      setToastMessage(message);
+
+      setTimeout(() => setIsToastTop(false), 3000);
+      setTimeout(() => setIsToastLeft(true), 2000);
+      setTimeout(() => setIsToastLeft(false), 3000);
+
+      setTimeout(() => setIsShowToast(false), 3200);
+    }
+
+    setIsShowToast(true);
+  };
+
   return (
     <>
       <Header
@@ -405,6 +512,10 @@ function customer() {
         handleRequestDecrement={handleRequestDecrement}
         handleRequestIncrement={handleRequestIncrement}
         setIsViewOrders={setIsViewOrders}
+        handleRequest={handleRequest}
+        note={note}
+        setNote={setNote}
+        handleNoteRequest={handleNoteRequest}
       />
 
       <CartButton
@@ -440,7 +551,11 @@ function customer() {
         setExpandedOrders={setExpandedOrders}
       />
 
-      <Toast t={t} showToast={showToast} />
+      <Toast
+        isToastTop={isToastTop}
+        isToastLeft={isToastLeft}
+        toastMessage={toastMessage}
+      />
 
       {/* cart item list overlay */}
       {isCartListItems && (

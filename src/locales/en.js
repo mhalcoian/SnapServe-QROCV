@@ -108,5 +108,6 @@ export default {
   },
   orders_for_table: "Orders for Table",
   total_amount: "Total Amount",
-  error_message_max: "Cannot exceed maximum quantity of 20.",
+  "Cannot exceed maximum quantity of 20.":
+    "Cannot exceed maximum quantity of 20.",
 };
